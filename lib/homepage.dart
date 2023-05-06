@@ -112,6 +112,8 @@ class _HomePageState extends State<HomePage> {
       if (input.length >= 5) {
         _controller.jumpTo(_controller.position.maxScrollExtent);
       }
+      print(bracketCount);
+      print(isFunc);
     });
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 23, 23, 23),
@@ -377,8 +379,10 @@ class _HomePageState extends State<HomePage> {
                                     isNumeric(input[input.length - 1]) ||
                                 (input[input.length - 1] == '!')) {
                               try {
-                                if (isFunc == true) {
-                                  answer = calculations(input + ')');
+                                // if (isFunc == true)
+                                if (bracketCount > 0) {
+                                  answer =
+                                      calculations(input + ')' * bracketCount);
                                 } else {
                                   answer = calculations(input);
                                 }
@@ -421,6 +425,7 @@ class _HomePageState extends State<HomePage> {
                               }
 
                               isFunc = true;
+                              bracketCount += 1;
                             } else if (index == 3) {
                               if (input.isNotEmpty) {
                                 lastIn = input[input.length - 1];
@@ -434,6 +439,7 @@ class _HomePageState extends State<HomePage> {
                               }
 
                               isFunc = true;
+                              bracketCount += 1;
                             } else if (index == 4) {
                               if (input.isNotEmpty) {
                                 lastIn = input[input.length - 1];
@@ -447,9 +453,11 @@ class _HomePageState extends State<HomePage> {
                               }
 
                               isFunc = true;
+                              bracketCount += 1;
                             } else if (index == 13) {
                               input += ')';
                               isFunc = false;
+                              bracketCount -= 1;
                             } else if (index == 12) {
                               if (input.isNotEmpty) {
                                 lastIn = input[input.length - 1];
@@ -462,6 +470,7 @@ class _HomePageState extends State<HomePage> {
                                 input += '(';
                               }
                               isFunc = true;
+                              bracketCount += 1;
                             } else if (index == 5) {
                               if (input.isNotEmpty) {
                                 lastIn = input[input.length - 1];
@@ -474,6 +483,7 @@ class _HomePageState extends State<HomePage> {
                                 input += 'ln(';
                               }
                               isFunc = true;
+                              bracketCount += 1;
                             } else if (index == 7) {
                               if (input.isNotEmpty) {
                                 lastIn = input[input.length - 1];
@@ -486,6 +496,7 @@ class _HomePageState extends State<HomePage> {
                                 input += 'log(';
                               }
                               isFunc = true;
+                              bracketCount += 1;
                             } else if (index == 10) {
                               if (input.isNotEmpty) {
                                 lastIn = input[input.length - 1];
@@ -500,6 +511,17 @@ class _HomePageState extends State<HomePage> {
                               answer = calculations(input);
                             } else if (index == 11) {
                               input += '^2';
+                            } else if (index == 14) {
+                              if (input.isNotEmpty) {
+                                lastIn = input[input.length - 1];
+                                if (isNumeric(lastIn) || lastIn == ')') {
+                                  input += '×√';
+                                } else {
+                                  input += '√';
+                                }
+                              } else {
+                                input += '√';
+                              }
                             } else {
                               input += functions1[index];
                             }
@@ -512,8 +534,10 @@ class _HomePageState extends State<HomePage> {
                                     isNumeric(input[input.length - 1]) ||
                                 (input[input.length - 1] == '!')) {
                               try {
-                                if (isFunc == true) {
-                                  answer = calculations(input + ')');
+                                // if (isFunc == true)
+                                if (bracketCount > 0) {
+                                  answer =
+                                      calculations(input + ')' * bracketCount);
                                 } else {
                                   answer = calculations(input);
                                 }
@@ -570,6 +594,12 @@ class _HomePageState extends State<HomePage> {
                             } else if (input.endsWith('ln(')) {
                               input = input.substring(0, input.length - 3);
                             } else {
+                              if (input.endsWith(')') && bracketCount > 0) {
+                                bracketCount += 1;
+                              }
+                              if (input.endsWith('(') && bracketCount > 0) {
+                                bracketCount -= 1;
+                              }
                               input = input.substring(0, input.length - 1);
                             }
                             if (input.isEmpty) {
@@ -578,6 +608,7 @@ class _HomePageState extends State<HomePage> {
                             isFunc = false;
                           } else if (index == 9) {
                             isClear = true;
+                            bracketCount = 0;
                             input = '';
                             msg = '';
                             answer = '';
@@ -595,9 +626,11 @@ class _HomePageState extends State<HomePage> {
                             }
                           } else if (index == mainButtons.length - 1) {
                             setState(() {
-                              if (isFunc == true) {
+                              // if (isFunc == true)
+                              if (bracketCount >= 0) {
                                 isFunc = false;
-                                input += ')';
+                                input += ')' * bracketCount;
+                                print(input);
                               }
                               // isAnswer = input.isEmpty ? false : true;
                               if (isNumeric(answer)) {
@@ -617,9 +650,22 @@ class _HomePageState extends State<HomePage> {
                               } else {
                                 isErr = false;
                               }
+                              bracketCount = 0;
                             });
                           } else {
-                            input += mainButtons[index];
+                            if (input.isNotEmpty) {
+                              if (isNumeric(mainButtons[index]) &&
+                                      input[input.length - 1] == ')' ||
+                                  input[input.length - 1] == 'π' ||
+                                  input[input.length - 1] == 'e' ||
+                                  input[input.length - 1] == '!') {
+                                input += '×' + mainButtons[index];
+                              } else {
+                                input += mainButtons[index];
+                              }
+                            } else {
+                              input += mainButtons[index];
+                            }
 
                             isAnswer = false;
                           }
@@ -627,8 +673,10 @@ class _HomePageState extends State<HomePage> {
                           if (input.isNotEmpty &&
                               isNumeric(input[input.length - 1])) {
                             try {
-                              if (isFunc == true) {
-                                answer = calculations(input + ')');
+                              // if (isFunc == true)
+                              if (bracketCount > 0) {
+                                answer =
+                                    calculations(input + ')' * bracketCount);
                               } else {
                                 answer = calculations(input);
                               }

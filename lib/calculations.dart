@@ -4,12 +4,6 @@ import 'package:calculator/gloabl.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 String calculations(String input) {
-  print(isDegree);
-
-  input = input.replaceAll(
-      RegExp(r'([a-zA-Z]|π)(\d)|(\))([a-zA-Z(])'), r'$1*$2$3*$4');
-  print(input);
-
   input = input.replaceAll('×', '*');
   input = input.replaceAll('÷', '/');
   input = input.replaceAll('π', '3.14159265359');
@@ -30,12 +24,11 @@ String calculations(String input) {
   }
 
   if (isDegree) {
-    RegExp regExp =
-        RegExp(r'(cos|sin|tan|arccos|arcsin|arctan)\((\d+(\.\d+)?)\)');
+    RegExp regExp = RegExp(r'(cos|sin|tan|arccos|arcsin|arctan)\((.*?)\)');
     input = input.replaceAllMapped(regExp, (match) {
       String function = match.group(1).toString();
       String argString = match.group(2).toString();
-      calculations(argString);
+      argString = calculations(argString);
       double argInRadians;
       try {
         double argInDegrees = double.parse(argString);
@@ -54,11 +47,11 @@ String calculations(String input) {
     });
   }
 
-  //to solve to log replacing log with ln/ln10
-  // RegExp regExp1 = RegExp(r'log\(([\d.]+)\)');
-  RegExp regExp1 = RegExp(r'log\(([\d.]+|sqrt\d+)\)');
+  RegExp regExp1 = RegExp(r'log\((.*?)\)');
+
   input = input.replaceAllMapped(regExp1, (match) {
     String argString = match.group(1).toString();
+    argString = calculations(argString);
     Expression exp = p.parse(argString);
     ContextModel cm = ContextModel();
     double eval = exp.evaluate(EvaluationType.REAL, cm);
@@ -67,12 +60,12 @@ String calculations(String input) {
   });
 
   print('res' + input);
-  print(asin(0.5));
 
   try {
     Expression exp = p.parse(input);
     ContextModel cm = ContextModel();
     double eval = exp.evaluate(EvaluationType.REAL, cm);
+    print(eval);
     // String evalstr = eval.toString();
     // print(eval);
     // print(eval.toString().length);
