@@ -1,16 +1,6 @@
-# calculator
+scientific calculator using flutter math_expression package 
+that can solve basic and logarithmic and trigonometric expressions
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot_1683372602](https://user-images.githubusercontent.com/79010097/236621547-7d8d6f3a-9854-4d12-93d1-be280c16f19d.png)
+![Screenshot_1683372640](https://user-images.githubusercontent.com/79010097/236621550-058a6834-625b-4879-89eb-2d86e85a5a5f.png)
+![Screenshot_1683372606](https://user-images.githubusercontent.com/79010097/236621554-6a70f236-7419-49a1-9cb6-3ad4304d28e3.png)
